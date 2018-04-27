@@ -4313,9 +4313,6 @@ int main(int argc, char **argv, char **envp)
         qemu_add_data_dir(dirs[i]);
     }
 
-    /* try to find datadir relative to the executable path */
-    qemu_add_data_dir(os_find_datadir());
-
     /* add the datadir specified when building */
     qemu_add_data_dir(CONFIG_QEMU_DATADIR);
 
