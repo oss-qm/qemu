@@ -216,3 +216,7 @@ trace-ust-all.c
 /configure-stamp
 /pc-bios/bamboo.dtb
 /roms/vgabios/
+
+# debian
+/qemu-build
+/user-static-build
