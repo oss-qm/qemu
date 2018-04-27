@@ -4170,11 +4170,6 @@ int main(int argc, char **argv, char **envp)
     }
     g_strfreev(dirs);
 
-    /* try to find datadir relative to the executable path */
-    dir = os_find_datadir();
-    qemu_add_data_dir(dir);
-    g_free(dir);
-
     /* add the datadir specified when building */
     qemu_add_data_dir(CONFIG_QEMU_DATADIR);
 
