@@ -1,13 +1,8 @@
-#docs/atomics.txt
 docs/blkverify.txt
 docs/bootindex.txt
 docs/ccid.txt
 docs/ich9-ehci-uhci.cfg
 docs/live-block-ops.txt
-#docs/memory.txt
-#docs/migration.txt
-docs/q35-chipset.cfg
-#docs/qapi-code-gen.txt
 docs/qdev-device-use.txt
 docs/qemupciserial.inf
 docs/qmp-*
@@ -18,5 +13,3 @@ docs/usb-storage.txt
 docs/virtio-balloon-stats.txt
 docs/vnc-ledstate-Pseudo-encoding.txt
 docs/writing-qmp-commands.txt
-#docs/xbzrle.txt
-#docs/xen-save-devices-state.txt
