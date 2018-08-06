@@ -17,6 +17,8 @@
 #include "qemu/osdep.h"
 #include <glob.h>
 #include <dirent.h>
+//#include <EGL/eglext.h>
+//#include <epoxy/egl.h>
 
 #include "qemu/error-report.h"
 #include "ui/console.h"
