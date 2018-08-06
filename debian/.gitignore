@@ -25,3 +25,8 @@
 /qemu/
 /tmp/
 !patches
+/qemu-system-i386/
+/qemu-system-x86-64/
+/qemu-block-curl/
+/qemu-block-gluster/
+/qemu-block-rbd/
