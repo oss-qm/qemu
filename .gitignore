@@ -143,7 +143,3 @@ trace-ust-all.h
 trace-ust-all.c
 /configure-stamp
 /pc-bios/bamboo.dtb
-
-# debian
-/qemu-build
-/user-static-build
