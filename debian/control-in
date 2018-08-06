@@ -26,8 +26,6 @@ Build-Depends: debhelper (>= 9),
 # for virtfs
 # --enable-attr
  libattr1-dev,
-# --enable-bluez	linux-*
- libbluetooth-dev [linux-any],
 # --enable-brlapi
  libbrlapi-dev,
 # --enable-virtfs	linux-*
