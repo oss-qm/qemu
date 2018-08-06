@@ -98,3 +98,12 @@ test-filter-redirector
 *-test
 qapi-schema/*.test.*
 vm/*.img
+tcg/hello-i386
+tcg/test_path
+tcg/sha1-i386
+tcg/test-i386
+tcg/test-i386-fprem
+tcg/test-i386.out
+tcg/test-i386.ref
+tcg/test-mmap
+tcg/testthread

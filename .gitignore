@@ -5,6 +5,7 @@
 /config-target.*
 /config.status
 /config-temp
+/build-stamp
 /trace-events-all
 /trace/generated-events.h
 /trace/generated-events.c
@@ -140,3 +141,5 @@ trace-dtrace-root.h
 trace-dtrace-root.dtrace
 trace-ust-all.h
 trace-ust-all.c
+/configure-stamp
+/pc-bios/bamboo.dtb
