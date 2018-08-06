@@ -133,3 +133,7 @@ trace-dtrace-root.dtrace
 trace-ust-all.h
 trace-ust-all.c
 /configure-stamp
+
+# debian
+/qemu-build
+/user-static-build
