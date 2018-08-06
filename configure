@@ -247,6 +247,7 @@ modules="no"
 prefix="/usr/local"
 mandir="\${prefix}/share/man"
 datadir="\${prefix}/share"
+datapth="\${datadir}"
 qemu_docdir="\${prefix}/share/doc/qemu"
 bindir="\${prefix}/bin"
 libdir="\${prefix}/lib"
@@ -836,6 +837,8 @@ for opt do
   ;;
   --localstatedir=*) local_statedir="$optarg"
   ;;
+  --datapath=*) qemu_datapath="$optarg"
+  ;;
   --sbindir=*|--sharedstatedir=*|\
   --oldincludedir=*|--datarootdir=*|--infodir=*|--localedir=*|\
   --htmldir=*|--dvidir=*|--pdfdir=*|--psdir=*)
@@ -1313,6 +1316,7 @@ Advanced options (experts only):
   --static                 enable static build [$static]
   --mandir=PATH            install man pages in PATH
   --datadir=PATH           install firmware in PATH$confsuffix
+  --datapath=PATH:PATH     firmware search path
   --docdir=PATH            install documentation in PATH$confsuffix
   --bindir=PATH            install binaries in PATH
   --libdir=PATH            install libraries in PATH
@@ -4850,6 +4854,10 @@ qemu_confdir=$sysconfdir$confsuffix
 qemu_moddir=$libdir$confsuffix
 qemu_datadir=$datadir$confsuffix
 qemu_localedir="$datadir/locale"
+
+if test "$qemu_datapath" = "" ; then
+    qemu_datapath="$qemu_datadir"
+fi
 
 tools=""
 if test "$want_tools" = "yes" ; then
