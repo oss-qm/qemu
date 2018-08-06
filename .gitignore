@@ -116,3 +116,7 @@ TAGS
 docker-src.*
 *~
 /configure-stamp
+
+# debian
+/qemu-build
+/user-static-build
