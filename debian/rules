@@ -72,11 +72,12 @@ override_dh_auto_configure:
 		--enable-system \
 		--enable-modules \
 		--target-list="${system_targets}" \
+		--datapath="${DATAPATH}" \
 		$(shell sh debian/extract-config-opts \
 		    $(DEB_HOST_ARCH_OS)-$(DEB_HOST_ARCH) debian/control) \
 		$(QEMU_CONFIGURE_OPTIONS)
-		echo '#define CONFIG_QEMU_DATAPATH "${DATAPATH}"' >> config-host.h
-		echo '#define CONFIG_QEMU_DATAPATH "${DATAPATH}"' >> config-host.h-timestamp
+#		echo '#define CONFIG_QEMU_DATAPATH "${DATAPATH}"' >> config-host.h
+#		echo '#define CONFIG_QEMU_DATAPATH "${DATAPATH}"' >> config-host.h-timestamp
 
 override_dh_auto_build: override_dh_auto_configure
 	# system and utils build
