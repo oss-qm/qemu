@@ -5280,7 +5280,7 @@ if test "$strip_opt" = "yes" ; then
 fi
 config_host_enable_if "HOST_WORDS_BIGENDIAN"                "$bigendian"
 if test "$mingw32" = "yes" ; then
-  echo "CONFIG_WIN32=y" >> $config_host_mak
+  config_host_enable "CONFIG_WIN32"
   rc_version=$(cat $source_path/VERSION)
   version_major=${rc_version%%.*}
   rc_version=${rc_version#*.}
@@ -5291,13 +5291,13 @@ if test "$mingw32" = "yes" ; then
   echo "CONFIG_FILEVERSION=$version_major,$version_minor,$version_subminor,$version_micro" >> $config_host_mak
   echo "CONFIG_PRODUCTVERSION=$version_major,$version_minor,$version_subminor,$version_micro" >> $config_host_mak
   if test "$guest_agent_with_vss" = "yes" ; then
-    echo "CONFIG_QGA_VSS=y" >> $config_host_mak
+    config_host_enable "CONFIG_QGA_VSS"
     echo "QGA_VSS_PROVIDER=$qga_vss_provider" >> $config_host_mak
     echo "WIN_SDK=\"$win_sdk\"" >> $config_host_mak
   fi
   config_host_enable_if "CONFIG_QGA_NTDDDISK"               "$guest_agent_ntddscsi"
   if test "$guest_agent_msi" = "yes"; then
-    echo "QEMU_GA_MSI_ENABLED=yes" >> $config_host_mak  
+    config_host_enable "QEMU_GA_MSI_ENABLED"
     echo "QEMU_GA_MSI_MINGW_DLL_PATH=${QEMU_GA_MSI_MINGW_DLL_PATH}" >> $config_host_mak
     echo "QEMU_GA_MSI_WITH_VSS=${QEMU_GA_MSI_WITH_VSS}" >> $config_host_mak
     echo "QEMU_GA_MSI_ARCH=${QEMU_GA_MSI_ARCH}" >> $config_host_mak
@@ -5306,7 +5306,7 @@ if test "$mingw32" = "yes" ; then
     echo "QEMU_GA_VERSION=${QEMU_GA_VERSION}" >> $config_host_mak
   fi
 else
-  echo "CONFIG_POSIX=y" >> $config_host_mak
+  config_host_enable "CONFIG_POSIX"
 fi
 
 config_host_enable_if "CONFIG_LINUX"                        "$linux"
@@ -5315,18 +5315,16 @@ config_host_enable_if "CONFIG_AIX"                          "$aix"
 config_host_enable_if "CONFIG_HAIKU"                        "$haiku"
 
 if test "$solaris" = "yes" ; then
-  echo "CONFIG_SOLARIS=y" >> $config_host_mak
+  config_host_enable "CONFIG_SOLARIS"
   echo "CONFIG_SOLARIS_VERSION=$solarisrev" >> $config_host_mak
-  if test "$needs_libsunmath" = "yes" ; then
-    echo "CONFIG_NEEDS_LIBSUNMATH=y" >> $config_host_mak
-  fi
+  config_host_enable_if "CONFIG_NEEDS_LIBSUNMATH"           "$needs_libsunmath"
 fi
 
 config_host_enable_if "CONFIG_STATIC"                       "$static"
 config_host_enable_if "CONFIG_PROFILER"                     "$profiler"
 
 if test "$slirp" = "yes" ; then
-  echo "CONFIG_SLIRP=y" >> $config_host_mak
+  config_host_enable "CONFIG_SLIRP"
   echo "CONFIG_SMBD_COMMAND=\"$smbd\"" >> $config_host_mak
 fi
 config_host_enable_if "CONFIG_VDE"                          "$vde"
@@ -5369,10 +5367,10 @@ if test "$modules" = "yes"; then
   # $shacmd can generate a hash started with digit, which the compiler doesn't
   # like as an symbol. So prefix it with an underscore
   echo "CONFIG_STAMP=_$( (echo $qemu_version; echo $pkgversion; cat $0) | $shacmd - | cut -f1 -d\ )" >> $config_host_mak
-  echo "CONFIG_MODULES=y" >> $config_host_mak
+  config_host_enable "CONFIG_MODULES"
 fi
 if test "$sdl" = "yes" ; then
-  echo "CONFIG_SDL=y" >> $config_host_mak
+  config_host_enable "CONFIG_SDL"
   echo "CONFIG_SDLABI=$sdlabi" >> $config_host_mak
   echo "SDL_CFLAGS=$sdl_cflags" >> $config_host_mak
 fi
@@ -5414,14 +5412,14 @@ fi
 config_host_enable_if "CONFIG_BRLAPI"                       "$brlapi"
 
 if test "$bluez" = "yes" ; then
-  echo "CONFIG_BLUEZ=y" >> $config_host_mak
+  config_host_enable "CONFIG_BLUEZ"
   echo "BLUEZ_CFLAGS=$bluez_cflags" >> $config_host_mak
 fi
 
 config_host_enable_if "CONFIG_HAS_GLIB_SUBPROCESS_TESTS"    "$glib_subprocess"
 
 if test "$gtk" = "yes" ; then
-  echo "CONFIG_GTK=y" >> $config_host_mak
+  config_host_enable "CONFIG_GTK"
   echo "CONFIG_GTKABI=$gtkabi" >> $config_host_mak
   echo "GTK_CFLAGS=$gtk_cflags" >> $config_host_mak
   echo "GTK_LIBS=$gtk_libs" >> $config_host_mak
@@ -5452,16 +5450,16 @@ config_host_enable_if "HAVE_BROKEN_SIZE_MAX"                "$have_broken_size_m
 # if this macro is set.
 config_host_enable_if "HAVE_FSXATTR"                        "$have_fsxattr"
 if test "$vte" = "yes" ; then
-  echo "CONFIG_VTE=y" >> $config_host_mak
+  config_host_enable "CONFIG_VTE"
   echo "VTE_CFLAGS=$vte_cflags" >> $config_host_mak
 fi
 if test "$virglrenderer" = "yes" ; then
-  echo "CONFIG_VIRGL=y" >> $config_host_mak
+  config_host_enable "CONFIG_VIRGL"
   echo "VIRGL_CFLAGS=$virgl_cflags" >> $config_host_mak
   echo "VIRGL_LIBS=$virgl_libs" >> $config_host_mak
 fi
 if test "$xen" = "yes" ; then
-  echo "CONFIG_XEN_BACKEND=y" >> $config_host_mak
+  config_host_enable "CONFIG_XEN_BACKEND"
   echo "CONFIG_XEN_CTRL_INTERFACE_VERSION=$xen_ctrl_version" >> $config_host_mak
   config_host_enable_if "CONFIG_XEN_PV_DOMAIN_BUILD"        "$xen_pv_domain_build"
   fi
@@ -5488,7 +5486,7 @@ config_host_enable_if "CONFIG_USB_LIBUSB"                   "$libusb"
 config_host_enable_if "CONFIG_USB_REDIR"                    "$usb_redir"
 
 if test "$opengl" = "yes" ; then
-  echo "CONFIG_OPENGL=y" >> $config_host_mak
+  config_host_enable "CONFIG_OPENGL"
   echo "OPENGL_LIBS=$opengl_libs" >> $config_host_mak
   config_host_enable_if "CONFIG_OPENGL_DMABUF"              "$opengl_dmabuf"
 fi
@@ -5498,7 +5496,7 @@ config_host_enable_if "CONFIG_LZO"                          "$lzo"
 config_host_enable_if "CONFIG_SNAPPY"                       "$snappy"
 
 if test "$bzip2" = "yes" ; then
-  echo "CONFIG_BZIP2=y" >> $config_host_mak
+  config_host_enable "CONFIG_BZIP2"
   echo "BZIP2_LIBS=-lbz2" >> $config_host_mak
 fi
 
@@ -5578,18 +5576,18 @@ fi
 
 echo "TRACE_BACKENDS=$trace_backends" >> $config_host_mak
 if have_backend "nop"; then
-  echo "CONFIG_TRACE_NOP=y" >> $config_host_mak
+  config_host_enable "CONFIG_TRACE_NOP"
 fi
 if have_backend "simple"; then
-  echo "CONFIG_TRACE_SIMPLE=y" >> $config_host_mak
+  config_host_enable "CONFIG_TRACE_SIMPLE"
   # Set the appropriate trace file.
   trace_file="\"$trace_file-\" FMT_pid"
 fi
 if have_backend "log"; then
-  echo "CONFIG_TRACE_LOG=y" >> $config_host_mak
+  config_host_enable "CONFIG_TRACE_LOG"
 fi
 if have_backend "ust"; then
-  echo "CONFIG_TRACE_UST=y" >> $config_host_mak
+  config_host_enable "CONFIG_TRACE_UST"
 fi
 if have_backend "dtrace"; then
   config_host_enable    "CONFIG_TRACE_DTRACE"
@@ -5597,14 +5595,14 @@ if have_backend "dtrace"; then
 fi
 if have_backend "ftrace"; then
   if test "$linux" = "yes" ; then
-    echo "CONFIG_TRACE_FTRACE=y" >> $config_host_mak
+    config_host_enable "CONFIG_TRACE_FTRACE"
   else
     feature_not_found "ftrace(trace backend)" "ftrace requires Linux"
   fi
 fi
 if have_backend "syslog"; then
   if test "$posix_syslog" = "yes" ; then
-    echo "CONFIG_TRACE_SYSLOG=y" >> $config_host_mak
+    config_host_enable "CONFIG_TRACE_SYSLOG"
   else
     feature_not_found "syslog(trace backend)" "syslog not available"
   fi
