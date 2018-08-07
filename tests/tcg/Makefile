@@ -8,7 +8,7 @@ QEMU_X86_64=../../x86_64-linux-user/qemu-x86_64
 CC_X86_64=$(CC_I386) -m64
 
 QEMU_INCLUDES += -I../..
-CFLAGS=-Wall -O2 -g -fno-strict-aliasing -I../../include
+CFLAGS=-Wall -O2 -g -fno-strict-aliasing -I../../include -I../..
 #CFLAGS+=-msse2
 LDFLAGS=
 

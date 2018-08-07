@@ -40,7 +40,7 @@ common_configure_opts = \
 	--with-system-pixman \
 	--interp-prefix=/etc/qemu-binfmt/%M \
 	--localstatedir=/var \
-	--datapath="$(DATAPATH)" \
+	--datapath="${DATAPATH}" \
 	--enable-debug \
 
 # Cross compiling support
@@ -72,7 +72,6 @@ override_dh_auto_configure:
 		--enable-system \
 		--enable-modules \
 		--target-list="${system_targets}" \
-		--datapath="${DATAPATH}" \
 		$(shell sh debian/extract-config-opts \
 		    $(DEB_HOST_ARCH_OS)-$(DEB_HOST_ARCH) debian/control) \
 		$(QEMU_CONFIGURE_OPTIONS)

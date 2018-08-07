@@ -137,3 +137,5 @@ trace-ust-all.c
 # debian
 /qemu-build
 /user-static-build
+
+/pc-bios/bamboo.dtb

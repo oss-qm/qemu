@@ -89,3 +89,6 @@ test-filter-mirror
 test-filter-redirector
 *-test
 qapi-schema/*.test.*
+
+tcg/hello-i386
+tcg/test_path
