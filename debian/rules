@@ -151,56 +151,16 @@ endif # linux
 	dh_md5sums
 	dh_builddeb
 
-xxxx_install:
-	dh_testdir
-	dh_testroot
-	dh_prep
-	dh_installdirs -a
+## FIXME:
+#ifneq (${ai},-i)	# do not run this for binary-indep
+## qemu-ifup is arch-specific
+#	install -D debian/qemu-ifup.$(DEB_HOST_ARCH_OS) \
+#		debian/qemu-system-common/etc/qemu-ifup
+#	dh_installinit -pqemu-guest-agent
+#endif
 
-	# system and utils install
-	$(MAKE) DESTDIR=$(CURDIR)/debian/tmp install
-
-	# qemu-system subpackages
-	mv debian/tmp/usr/share/man/man1/qemu.1 debian/tmp/usr/share/man/man1/qemu-system.1
-	$(foreach s,${systems},$(call inst-system,$s))
-
-ifeq ($(DEB_HOST_ARCH_OS),linux)
-
-# virtfs-proxy-helper and qemu-bridge-helper are linux-specific
-	for f in usr/bin/virtfs-proxy-helper \
-	         usr/share/man/man1/virtfs-proxy-helper.1 \
-		 usr/lib/qemu/qemu-bridge-helper \
-	; do \
-	  mkdir -p debian/qemu-system-common/$${f%/*} ; \
-	  mv debian/tmp/$$f debian/qemu-system-common/$$f ; \
-	done
-
-endif # linux
-
-# install whole thing so --list-missing works right
-	dh_install --list-missing
-# install the rest for arch/indep as needed
-	dh_installdocs ${ai} -Nqemu-user-binfmt
-	dh_installchangelogs ${ai} -Nqemu-user-binfmt
-	dh_installdocs ${ai} -pqemu-user-binfmt --link-doc=qemu-user
-	dh_installman ${ai}
-	dh_installudev ${ai}
-ifneq (${ai},-i)	# do not run this for binary-indep
-# qemu-ifup is arch-specific
-	install -D debian/qemu-ifup.$(DEB_HOST_ARCH_OS) \
-		debian/qemu-system-common/etc/qemu-ifup
-	dh_installinit -pqemu-guest-agent
-endif
-	dh_link ${ai}
-	dh_strip ${ai}
-	dh_compress ${ai}
-	dh_fixperms ${ai}
-	dh_makeshlibs ${ai}
-	dh_shlibdeps ${ai}
-	dh_installdeb ${ai}
-	dh_gencontrol ${ai}
-	dh_md5sums ${ai}
-	dh_builddeb ${ai}
+override_dh_auto_test:
+	@echo "Skipping tests"
 
 # only include rules for debian/control if debian/control-in is present
 debian/control: debian/control-in debian/rules
