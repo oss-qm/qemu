@@ -40,6 +40,7 @@ common_configure_opts = \
 	--with-system-pixman \
 	--interp-prefix=/etc/qemu-binfmt/%M \
 	--localstatedir=/var \
+	--withconfsuffix=qemu-2.8 \
 	--datapath="${DATAPATH}" \
 	--enable-debug \
 
@@ -164,7 +165,6 @@ xxxx_install:
 
 	# system and utils install
 	$(MAKE) DESTDIR=$(CURDIR)/debian/tmp install
-#	$(MAKE) -C qemu-build DESTDIR=$(CURDIR)/debian/tmp install
 
 	# qemu-system subpackages
 	mv debian/tmp/usr/share/man/man1/qemu.1 debian/tmp/usr/share/man/man1/qemu-system.1
