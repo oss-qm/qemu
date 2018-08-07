@@ -1,4 +1,4 @@
-usr/share/openhackware/ppc_rom.bin usr/share/qemu/ppc_rom.bin
-usr/share/openbios/openbios-ppc usr/share/qemu/openbios-ppc
-usr/share/slof/slof.bin usr/share/qemu/slof.bin
-usr/share/slof/spapr-rtas.bin usr/share/qemu/spapr-rtas.bin
+usr/share/openhackware/ppc_rom.bin usr/share/qemu-2.8/ppc_rom.bin
+usr/share/openbios/openbios-ppc    usr/share/qemu-2.8/openbios-ppc
+usr/share/slof/slof.bin            usr/share/qemu-2.8/slof.bin
+usr/share/slof/spapr-rtas.bin      usr/share/qemu-2.8/spapr-rtas.bin

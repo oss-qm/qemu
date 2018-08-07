@@ -22,7 +22,7 @@ V ?= 1
 # list of packages we're supposed to build
 BUILD_PACKAGES = $(call dpkg_late_eval,BUILD_PACKAGES,dh_listpackages)
 
-DATAPATH = /usr/share/qemu:/usr/share/seabios:/usr/lib/ipxe/qemu
+DATAPATH = /usr/share/qemu-2.8:/usr/share/seabios:/usr/lib/ipxe/qemu
 
 # we add another set of configure options from debian/control
 common_configure_opts = \
@@ -40,7 +40,7 @@ common_configure_opts = \
 	--with-system-pixman \
 	--interp-prefix=/etc/qemu-binfmt/%M \
 	--localstatedir=/var \
-	--with-confsuffix=qemu-2.8 \
+	--with-confsuffix=/qemu-2.8 \
 	--datapath="${DATAPATH}" \
 	--enable-debug \
 
@@ -105,12 +105,6 @@ ${sysarch_$1}) \
 	  sed -e 's/ /, /g' -e 'y/_/-/' >> debian/qemu-system-$1.substvars
 	dh_link -pqemu-system-$1 usr/share/doc/qemu-system-common usr/share/doc/qemu-system-$1/common
 
-endef
-
-define prep_system
-	echo "Installing qemu-system for system type: $1"
-	mkdir -p debian/qemu-system-$1/usr/share/man/man1 debian/qemu-system-$1/usr/bin
-	dh_link -pqemu-system-$1 usr/share/doc/qemu-system-common usr/share/doc/qemu-system-$1/common
 endef
 
 override_dh_auto_install:
