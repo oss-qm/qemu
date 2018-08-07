@@ -68,7 +68,7 @@ binary binary-arch binary-indep build build-arch build-indep clean install insta
 
 override_dh_auto_configure:
 	./configure ${common_configure_opts} \
-		--disable-user \
+		--enable-user \
 		--enable-system \
 		--enable-modules \
 		--target-list="${system_targets}" \

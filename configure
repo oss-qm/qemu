@@ -162,6 +162,16 @@ have_backend () {
     echo "$trace_backends" | grep "$1" >/dev/null
 }
 
+## set config flag
+config_enable() {
+    echo "$1=y" >> $config_host_mak
+}
+
+## set config flag if param is "yes"
+config_enable_if() {
+    test "$2" = "yes" && config_enable "$1"
+}
+
 # default parameters
 source_path=$(dirname "$0")
 cpu=""
@@ -5228,9 +5238,8 @@ echo "libs_softmmu=$libs_softmmu" >> $config_host_mak
 
 echo "ARCH=$ARCH" >> $config_host_mak
 
-if test "$debug_tcg" = "yes" ; then
-  echo "CONFIG_DEBUG_TCG=y" >> $config_host_mak
-fi
+config_enable_if "CONFIG_DEBUG_TCG" "$debug_tcg"
+
 if test "$strip_opt" = "yes" ; then
   echo "STRIP=${strip}" >> $config_host_mak
 fi
@@ -5238,7 +5247,7 @@ if test "$bigendian" = "yes" ; then
   echo "HOST_WORDS_BIGENDIAN=y" >> $config_host_mak
 fi
 if test "$mingw32" = "yes" ; then
-  echo "CONFIG_WIN32=y" >> $config_host_mak
+  config_enable "CONFIG_WIN32"
   rc_version=$(cat $source_path/VERSION)
   version_major=${rc_version%%.*}
   rc_version=${rc_version#*.}
@@ -5249,13 +5258,11 @@ if test "$mingw32" = "yes" ; then
   echo "CONFIG_FILEVERSION=$version_major,$version_minor,$version_subminor,$version_micro" >> $config_host_mak
   echo "CONFIG_PRODUCTVERSION=$version_major,$version_minor,$version_subminor,$version_micro" >> $config_host_mak
   if test "$guest_agent_with_vss" = "yes" ; then
-    echo "CONFIG_QGA_VSS=y" >> $config_host_mak
+    config_enable "CONFIG_QGA_VSS"
     echo "QGA_VSS_PROVIDER=$qga_vss_provider" >> $config_host_mak
     echo "WIN_SDK=\"$win_sdk\"" >> $config_host_mak
   fi
-  if test "$guest_agent_ntddscsi" = "yes" ; then
-    echo "CONFIG_QGA_NTDDDISK=y" >> $config_host_mak
-  fi
+  config_enable_if "CONFIG_QGA_NTDDDISK" "$guest_agent_ntddscsi"
   if test "$guest_agent_msi" = "yes"; then
     echo "QEMU_GA_MSI_ENABLED=yes" >> $config_host_mak  
     echo "QEMU_GA_MSI_MINGW_DLL_PATH=${QEMU_GA_MSI_MINGW_DLL_PATH}" >> $config_host_mak
@@ -5266,142 +5273,81 @@ if test "$mingw32" = "yes" ; then
     echo "QEMU_GA_VERSION=${QEMU_GA_VERSION}" >> $config_host_mak
   fi
 else
-  echo "CONFIG_POSIX=y" >> $config_host_mak
+  config_enable "CONFIG_POSIX"
 fi
 
-if test "$linux" = "yes" ; then
-  echo "CONFIG_LINUX=y" >> $config_host_mak
-fi
-
-if test "$darwin" = "yes" ; then
-  echo "CONFIG_DARWIN=y" >> $config_host_mak
-fi
-
-if test "$aix" = "yes" ; then
-  echo "CONFIG_AIX=y" >> $config_host_mak
-fi
+config_enable_if "CONFIG_LINUX"       "$linux"
+config_enable_if "CONFIG_DARWIN"      "$darwin"
+config_enable_if "CONFIG_AIX"         "$aix"
+config_enable_if "CONFIG_HAIKU"       "$haiku"
 
 if test "$solaris" = "yes" ; then
-  echo "CONFIG_SOLARIS=y" >> $config_host_mak
+  config_enable "CONFIG_SOLARIS"
   echo "CONFIG_SOLARIS_VERSION=$solarisrev" >> $config_host_mak
-  if test "$needs_libsunmath" = "yes" ; then
-    echo "CONFIG_NEEDS_LIBSUNMATH=y" >> $config_host_mak
-  fi
+  config_enable_if "CONFIG_NEEDS_LIBSUNMATH" "$needs_libsunmath"
 fi
-if test "$haiku" = "yes" ; then
-  echo "CONFIG_HAIKU=y" >> $config_host_mak
-fi
-if test "$static" = "yes" ; then
-  echo "CONFIG_STATIC=y" >> $config_host_mak
-fi
-if test "$profiler" = "yes" ; then
-  echo "CONFIG_PROFILER=y" >> $config_host_mak
-fi
+
+config_enable_if "CONFIG_STATIC"     "$static"
+config_enable_if "CONFIG_PROFILER=y" "$profiler"
+
 if test "$slirp" = "yes" ; then
-  echo "CONFIG_SLIRP=y" >> $config_host_mak
+  config_enable "CONFIG_SLIRP"
   echo "CONFIG_SMBD_COMMAND=\"$smbd\"" >> $config_host_mak
 fi
-if test "$vde" = "yes" ; then
-  echo "CONFIG_VDE=y" >> $config_host_mak
-fi
-if test "$netmap" = "yes" ; then
-  echo "CONFIG_NETMAP=y" >> $config_host_mak
-fi
-if test "$l2tpv3" = "yes" ; then
-  echo "CONFIG_L2TPV3=y" >> $config_host_mak
-fi
-if test "$cap_ng" = "yes" ; then
-  echo "CONFIG_LIBCAP=y" >> $config_host_mak
-fi
+config_enable_if "CONFIG_VDE"    "$vde"
+config_enable_if "CONFIG_NETMAP" "$netmap"
+config_enable_if "CONFIG_L2TPV3" "$l2tpv3"
+config_enable_if "CONFIG_LIBCAP" "$cap_ng"
+
 echo "CONFIG_AUDIO_DRIVERS=$audio_drv_list" >> $config_host_mak
 for drv in $audio_drv_list; do
     def=CONFIG_$(echo $drv | LC_ALL=C tr '[a-z]' '[A-Z]')
     echo "$def=y" >> $config_host_mak
 done
-if test "$audio_pt_int" = "yes" ; then
-  echo "CONFIG_AUDIO_PT_INT=y" >> $config_host_mak
-fi
-if test "$audio_win_int" = "yes" ; then
-  echo "CONFIG_AUDIO_WIN_INT=y" >> $config_host_mak
-fi
+config_enable_if "CONFIG_AUDIO_PT_INT"  "$audio_pt_int"
+config_enable_if "CONFIG_AUDIO_WIN_INT" "$audio_win_int"
 echo "CONFIG_BDRV_RW_WHITELIST=$block_drv_rw_whitelist" >> $config_host_mak
 echo "CONFIG_BDRV_RO_WHITELIST=$block_drv_ro_whitelist" >> $config_host_mak
-if test "$vnc" = "yes" ; then
-  echo "CONFIG_VNC=y" >> $config_host_mak
-fi
-if test "$vnc_sasl" = "yes" ; then
-  echo "CONFIG_VNC_SASL=y" >> $config_host_mak
-fi
-if test "$vnc_jpeg" = "yes" ; then
-  echo "CONFIG_VNC_JPEG=y" >> $config_host_mak
-fi
-if test "$vnc_png" = "yes" ; then
-  echo "CONFIG_VNC_PNG=y" >> $config_host_mak
-fi
-if test "$fnmatch" = "yes" ; then
-  echo "CONFIG_FNMATCH=y" >> $config_host_mak
-fi
-if test "$xfs" = "yes" ; then
-  echo "CONFIG_XFS=y" >> $config_host_mak
-fi
+
+config_enable_if "CONFIG_VNC"      "$vnc"
+config_enable_if "CONFIG_VNC_SASL" "$vnc_sasl"
+config_enable_if "CONFIG_VNC_JPEG" "$vnc_jpeg"
+config_enable_if "CONFIG_VNC_PNG"  "$vnc_png"
+config_enable_if "CONFIG_FNMATCH"  "$fnmatch"
+config_enable_if "CONFIG_XFS"      "$xfs"
+
 qemu_version=$(head $source_path/VERSION)
 echo "VERSION=$qemu_version" >>$config_host_mak
 echo "PKGVERSION=$pkgversion" >>$config_host_mak
 echo "SRC_PATH=$source_path" >> $config_host_mak
 echo "TARGET_DIRS=$target_list" >> $config_host_mak
-if [ "$docs" = "yes" ] ; then
-  echo "BUILD_DOCS=yes" >> $config_host_mak
-fi
+
+config_enable_if "BUILD_DOCS" "$docs"
+
 if test "$modules" = "yes"; then
   # $shacmd can generate a hash started with digit, which the compiler doesn't
   # like as an symbol. So prefix it with an underscore
   echo "CONFIG_STAMP=_$( (echo $qemu_version; echo $pkgversion; cat $0) | $shacmd - | cut -f1 -d\ )" >> $config_host_mak
-  echo "CONFIG_MODULES=y" >> $config_host_mak
+  config_enable "CONFIG_MODULES"
 fi
 if test "$sdl" = "yes" ; then
-  echo "CONFIG_SDL=y" >> $config_host_mak
+  config_enable "CONFIG_SDL"
   echo "CONFIG_SDLABI=$sdlabi" >> $config_host_mak
   echo "SDL_CFLAGS=$sdl_cflags" >> $config_host_mak
 fi
-if test "$cocoa" = "yes" ; then
-  echo "CONFIG_COCOA=y" >> $config_host_mak
-fi
-if test "$curses" = "yes" ; then
-  echo "CONFIG_CURSES=y" >> $config_host_mak
-fi
-if test "$utimens" = "yes" ; then
-  echo "CONFIG_UTIMENSAT=y" >> $config_host_mak
-fi
-if test "$pipe2" = "yes" ; then
-  echo "CONFIG_PIPE2=y" >> $config_host_mak
-fi
-if test "$accept4" = "yes" ; then
-  echo "CONFIG_ACCEPT4=y" >> $config_host_mak
-fi
-if test "$splice" = "yes" ; then
-  echo "CONFIG_SPLICE=y" >> $config_host_mak
-fi
-if test "$eventfd" = "yes" ; then
-  echo "CONFIG_EVENTFD=y" >> $config_host_mak
-fi
-if test "$memfd" = "yes" ; then
-  echo "CONFIG_MEMFD=y" >> $config_host_mak
-fi
-if test "$fallocate" = "yes" ; then
-  echo "CONFIG_FALLOCATE=y" >> $config_host_mak
-fi
-if test "$fallocate_punch_hole" = "yes" ; then
-  echo "CONFIG_FALLOCATE_PUNCH_HOLE=y" >> $config_host_mak
-fi
-if test "$fallocate_zero_range" = "yes" ; then
-  echo "CONFIG_FALLOCATE_ZERO_RANGE=y" >> $config_host_mak
-fi
-if test "$posix_fallocate" = "yes" ; then
-  echo "CONFIG_POSIX_FALLOCATE=y" >> $config_host_mak
-fi
-if test "$sync_file_range" = "yes" ; then
-  echo "CONFIG_SYNC_FILE_RANGE=y" >> $config_host_mak
-fi
+config_enable_if "CONFIG_COCOA"                "$cocoa"
+config_enable_if "CONFIG_CURSES"               "$curses"
+config_enable_if "CONFIG_UTIMENSAT"            "$utimens"
+config_enable_if "CONFIG_PIPE2"                "$pipe2"
+config_enable_if "CONFIG_ACCEPT"               "$accept4"
+config_enable_if "CONFIG_SPLICE"               "$splice"
+config_enable_if "CONFIG_EVENTFD"              "$eventfd"
+config_enable_if "CONFIG_MEMFD"                "$memfd"
+config_enable_if "CONFIG_FALLOCATE"            "$fallocate"
+config_enable_if "CONFIG_FALLOCATE_PUNCH_HOLE" "$fallocate_punch_hole"
+config_enable_if "CONFIG_FALLOCATE_ZERO_RANGE" "$fallocate_zero_range"
+config_enable_if "CONFIG_POSIX_FALLOCATE"      "$posix_fallocate"
+config_enable_if "CONFIG_SYNC_FILE_RANGE"      "$sync_file_range"
 if test "$fiemap" = "yes" ; then
   echo "CONFIG_FIEMAP=y" >> $config_host_mak
 fi
