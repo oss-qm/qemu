@@ -48,20 +48,21 @@ ifneq ($(DEB_BUILD_GNU_TYPE), $(DEB_HOST_GNU_TYPE))
 common_configure_opts  += --cross-prefix=$(DEB_HOST_GNU_TYPE)-
 endif
 
-# list of system (softmmu) targets, from ./configure
-system_targets = \
- i386-softmmu \
- x86_64-softmmu \
+## configure here ...
+system-pkg-y := i386 x86_64
+
+## automatically derive system target names from chosen system packages
+system-targets-y += $(addsuffix -softmmu,$(system-pkg-y))
 
 # qemu-system subpackages, from d/control
 sys_systems = x86
 systems = ${sys_systems} misc
-sysarch_arm   = $(filter aarch64 arm,${system_targets})
-sysarch_mips  = $(filter mips mipsel mips64 mips64el,${system_targets})
-sysarch_ppc   = $(filter ppc ppc64 ppcemb,${system_targets})
-sysarch_sparc = $(filter sparc sparc64,${system_targets})
-sysarch_x86   = $(filter i386 x86_64,${system_targets})
-sysarch_misc  = $(filter-out $(foreach s,${sys_systems},${sysarch_$s}),${system_targets})
+sysarch_arm   = $(filter aarch64 arm,${system_targets-y})
+sysarch_mips  = $(filter mips mipsel mips64 mips64el,${system_targets-y})
+sysarch_ppc   = $(filter ppc ppc64 ppcemb,${system_targets-y})
+sysarch_sparc = $(filter sparc sparc64,${system_targets-y})
+sysarch_x86   = $(filter i386 x86_64,${system_targets-y})
+sysarch_misc  = $(filter-out $(foreach s,${sys_systems},${sysarch_$s}),${system_targets-y})
 
 binary binary-arch binary-indep build build-arch build-indep clean install install-arch install-indep: debian/control
 	dh $@
@@ -75,15 +76,11 @@ override_dh_auto_configure:
 		$(shell sh debian/extract-config-opts \
 		    $(DEB_HOST_ARCH_OS)-$(DEB_HOST_ARCH) debian/control) \
 		$(QEMU_CONFIGURE_OPTIONS)
-#		echo '#define CONFIG_QEMU_DATAPATH "${DATAPATH}"' >> config-host.h
-#		echo '#define CONFIG_QEMU_DATAPATH "${DATAPATH}"' >> config-host.h-timestamp
 
-override_dh_auto_build: override_dh_auto_configure
+override_dh_auto_build:
 	# system and utils build
 	# XXhack alert: opengl libs includes libdrm which is not needed
-#	$(MAKE) -C qemu-build V=${V} OPENGL_LIBS="-lepoxy -lgbm -lX11"
 	$(MAKE) V=${V} OPENGL_LIBS="-lepoxy -lgbm -lX11"
-#	dtc -o qemu-build/pc-bios/bamboo.dtb pc-bios/bamboo.dts
 	dtc -o pc-bios/bamboo.dtb pc-bios/bamboo.dts
 
 override_dh_auto_clean: debian/control
@@ -92,6 +89,7 @@ override_dh_auto_clean: debian/control
 	find scripts/ -name '*.pyc' -delete || :
 
 define inst-system
+	echo "installing system: $1"
 	mkdir -p debian/qemu-system-$1/usr/share/man/man1 debian/qemu-system-$1/usr/bin
 	for t in ${sysarch_$1}; do \
 	    mv debian/tmp/usr/bin/qemu-system-$$t debian/qemu-system-$1/usr/bin/; \
@@ -107,6 +105,56 @@ ${sysarch_$1}) \
 	dh_link -pqemu-system-$1 usr/share/doc/qemu-system-common usr/share/doc/qemu-system-$1/common
 
 endef
+
+define prep_system
+	echo "Installing qemu-system for system type: $1"
+	mkdir -p debian/qemu-system-$1/usr/share/man/man1 debian/qemu-system-$1/usr/bin
+	dh_link -pqemu-system-$1 usr/share/doc/qemu-system-common usr/share/doc/qemu-system-$1/common
+endef
+
+override_dh_auto_install:
+	echo "=== AUTO INSTALL ==="
+	dh_auto_install
+	cp qemu.1 debian/tmp/usr/share/man/man1/qemu-system.1
+	# qemu-system subpackages
+	for sys in $(system-pkg-y); do \
+		pkg=`echo "qemu-system-$$sys" | tr '_' '-'` ; \
+		pdir="debian/$$pkg" ; \
+		echo "installing system package: $$sys" ; \
+		mkdir -p $$pdir/usr/share/man/man1 $$pdir/usr/bin ; \
+		dh_link -p$$pkg usr/share/doc/qemu-system-common usr/share/doc/$$pkg/common ; \
+		install -D debian/tmp/usr/bin/qemu-system-$$sys $$pdir/usr/bin ; \
+		echo ".so man1/qemu-system.1" > $$pdir/usr/share/man/man1/qemu-system-$$sys.1; \
+	done
+
+ifeq ($(DEB_HOST_ARCH_OS),linux)
+# virtfs-proxy-helper and qemu-bridge-helper are linux-specific
+	for f in usr/bin/virtfs-proxy-helper \
+	         usr/share/man/man1/virtfs-proxy-helper.1 \
+		 usr/lib/qemu/qemu-bridge-helper \
+	; do \
+	  mkdir -p debian/qemu-system-common/$${f%/*} ; \
+	  mv debian/tmp/$$f debian/qemu-system-common/$$f ; \
+	done
+endif # linux
+# install whole thing so --list-missing works right
+	dh_install --list-missing
+# install the rest for arch/indep as needed
+	dh_installdocs
+	dh_installchangelogs
+	dh_installdocs
+	dh_installman
+	dh_installudev
+	dh_link
+	dh_strip
+	dh_compress
+	dh_fixperms
+	dh_makeshlibs
+	dh_shlibdeps
+	dh_installdeb
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
 
 xxxx_install:
 	dh_testdir
@@ -164,7 +212,6 @@ endif
 debian/control: debian/control-in debian/rules
 	sed -e 's/^:$(shell echo ${VENDOR} | tr '[A-Z]' '[a-z]')://' \
 		-e '/^:[a-z]*:/D' $< > $@.tmp
+	echo >> $@.tmp
+	for pkg in $(system-pkg-y); do (cat debian/control-system-$$pkg.in ; echo) >> $@.tmp ; done
 	mv -f $@.tmp $@
-
-#.PHONY: build clean binary-indep binary-arch binary install
-
