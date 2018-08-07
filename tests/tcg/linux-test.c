@@ -41,6 +41,8 @@
 #include <setjmp.h>
 #include <sys/shm.h>
 #include <stdbool.h>
+#include "qemu/typedefs.h"
+#include "qemu/compiler.h"
 #include "qemu/cutils.h"
 
 #define TESTPATH "/tmp/linux-test.tmp"
