@@ -6123,6 +6123,13 @@ echo "VERSION=$qemu_version" >>$config_host_mak
 echo "PKGVERSION=$pkgversion" >>$config_host_mak
 echo "SRC_PATH=$source_path" >> $config_host_mak
 echo "TARGET_DIRS=$target_list" >> $config_host_mak
+
+## set config flags for the selected targets
+for t in $target_list ; do
+    upper=$(echo "$t" | tr '[:lower:]' '[:upper:]' | tr '-' '_')
+    config_host_enable "CONFIG_TARGET_$upper"
+done
+
 if [ "$docs" = "yes" ] ; then
   echo "BUILD_DOCS=yes" >> $config_host_mak
 fi
