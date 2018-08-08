@@ -6701,9 +6701,9 @@ config_host_enable_if "CONFIG_GLUSTERFS_FALLOCATE"          "$glusterfs_fallocat
 config_host_enable_if "CONFIG_GLUSTERFS_ZEROFILL"           "$glusterfs_zerofill"
 
 if test "$libssh2" = "yes" ; then
-  echo "CONFIG_LIBSSH2=m" >> $config_host_mak
-  echo "LIBSSH2_CFLAGS=$libssh2_cflags" >> $config_host_mak
-  echo "LIBSSH2_LIBS=$libssh2_libs" >> $config_host_mak
+  config_host_module "CONFIG_LIBSSH2"
+  config_host_set_eq "LIBSSH2_CFLAGS"                       "$libssh2_cflags"
+  config_host_set_eq "LIBSSH2_LIBS"                         "$libssh2_libs"
 fi
 
 config_host_enable_if "CONFIG_RELATIVE_DATADIR"             "$CONFIG_RELATIVE_DATADIR"
