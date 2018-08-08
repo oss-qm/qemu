@@ -6592,9 +6592,9 @@ if test "$bzip2" = "yes" ; then
 fi
 
 if test "$libiscsi" = "yes" ; then
-  echo "CONFIG_LIBISCSI=m" >> $config_host_mak
-  echo "LIBISCSI_CFLAGS=$libiscsi_cflags" >> $config_host_mak
-  echo "LIBISCSI_LIBS=$libiscsi_libs" >> $config_host_mak
+  config_host_module "CONFIG_LIBISCSI"
+  config_host_set_uq "LIBISCSI_CFLAGS"                      "$libiscsi_cflags"
+  config_host_set_uq "LIBISCSI_LIBS"                        "$libiscsi_libs"
 fi
 
 if test "$libnfs" = "yes" ; then
