@@ -22,7 +22,7 @@ V ?= 1
 # list of packages we're supposed to build
 BUILD_PACKAGES = $(call dpkg_late_eval,BUILD_PACKAGES,dh_listpackages)
 
-DATAPATH = /usr/share/qemu-2.8:/usr/share/seabios:/usr/lib/ipxe/qemu
+FIRMWARE_PATH = /usr/share/qemu-2.8:/usr/share/seabios:/usr/lib/ipxe/qemu
 
 # we add another set of configure options from debian/control
 common_configure_opts = \
@@ -41,7 +41,7 @@ common_configure_opts = \
 	--interp-prefix=/etc/qemu-binfmt/%M \
 	--localstatedir=/var \
 	--with-confsuffix=/qemu-2.8 \
-	--datapath="${DATAPATH}" \
+	--firmwarepath="${FIRMWARE_PATH}" \
 	--enable-debug \
 
 # Cross compiling support
