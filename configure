@@ -6465,9 +6465,9 @@ if test "$qom_cast_debug" = "yes" ; then
   echo "CONFIG_QOM_CAST_DEBUG=y" >> $config_host_mak
 fi
 if test "$rbd" = "yes" ; then
-  echo "CONFIG_RBD=m" >> $config_host_mak
-  echo "RBD_CFLAGS=$rbd_cflags" >> $config_host_mak
-  echo "RBD_LIBS=$rbd_libs" >> $config_host_mak
+  config_host_module "CONFIG_RBD"
+  config_host_set_uq "RBD_CFLAGS"                           "$rbd_cflags"
+  config_host_set_uq "RBD_LIBS"                             "$rbd_libs"
 fi
 
 echo "CONFIG_COROUTINE_BACKEND=$coroutine" >> $config_host_mak
