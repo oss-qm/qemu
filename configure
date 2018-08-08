@@ -344,6 +344,7 @@ prefix="/usr/local"
 mandir="\${prefix}/share/man"
 datadir="\${prefix}/share"
 firmwarepath="\${prefix}/share/qemu-firmware"
+datapath="\${datadir}\${confsuffix}"
 qemu_docdir="\${prefix}/share/doc/qemu"
 bindir="\${prefix}/bin"
 libdir="\${prefix}/lib"
@@ -928,6 +929,8 @@ for opt do
   ;;
   --localstatedir=*) local_statedir="$optarg"
   ;;
+  --datapath=*) qemu_datapath="$optarg"
+  ;;
   --firmwarepath=*) firmwarepath="$optarg"
   ;;
   --host=*|--build=*|\
@@ -1442,6 +1445,7 @@ Advanced options (experts only):
   --static                 enable static build [$static]
   --mandir=PATH            install man pages in PATH
   --datadir=PATH           install firmware in PATH$confsuffix
+  --datapath=PATH          data search path (eg. firmware)
   --docdir=PATH            install documentation in PATH$confsuffix
   --bindir=PATH            install binaries in PATH
   --libdir=PATH            install libraries in PATH
@@ -5184,6 +5188,10 @@ if [ "$eventfd" = "yes" ]; then
   ivshmem=yes
 fi
 
+if test "$qemu_datapath" = "" ; then
+    qemu_datapath="$qemu_datadir"
+fi
+
 tools=""
 if test "$want_tools" = "yes" ; then
   tools="qemu-img\$(EXESUF) qemu-io\$(EXESUF) $tools"
@@ -5605,6 +5613,7 @@ echo "includedir=$includedir" >> $config_host_mak
 echo "mandir=$mandir" >> $config_host_mak
 echo "sysconfdir=$sysconfdir" >> $config_host_mak
 echo "qemu_confdir=$qemu_confdir" >> $config_host_mak
+echo "qemu_datapath=$qemu_datapath" >> $config_host_mak
 echo "qemu_datadir=$qemu_datadir" >> $config_host_mak
 echo "qemu_firmwarepath=$firmwarepath" >> $config_host_mak
 echo "qemu_docdir=$qemu_docdir" >> $config_host_mak
