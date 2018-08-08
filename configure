@@ -6615,31 +6615,21 @@ fi
 echo "CONFIG_TRACE_FILE=$trace_file" >> $config_host_mak
 
 if test "$rdma" = "yes" ; then
-  echo "CONFIG_RDMA=y" >> $config_host_mak
-  echo "RDMA_LIBS=$rdma_libs" >> $config_host_mak
+  config_host_enable "CONFIG_RDMA"
+  config_host_set_uq "RDMA_LIBS=$rdma_libs"
 fi
 
-if test "$have_rtnetlink" = "yes" ; then
-  echo "CONFIG_RTNETLINK=y" >> $config_host_mak
-fi
+config_host_enable_if "CONFIG_RTNETLINK"                    "$have_rtnetlink"
 
 if test "$libxml2" = "yes" ; then
-  echo "CONFIG_LIBXML2=y" >> $config_host_mak
-  echo "LIBXML2_CFLAGS=$libxml2_cflags" >> $config_host_mak
-  echo "LIBXML2_LIBS=$libxml2_libs" >> $config_host_mak
+  config_host_enable "CONFIG_LIBXML2"
+  config_host_set_uq "LIBXML2_CFLAGS"                       "$libxml2_cflags"
+  config_host_set_uq "LIBXML2_LIBS"                         "$libxml2_libs"
 fi
 
-if test "$replication" = "yes" ; then
-  echo "CONFIG_REPLICATION=y" >> $config_host_mak
-fi
-
-if test "$have_af_vsock" = "yes" ; then
-  echo "CONFIG_AF_VSOCK=y" >> $config_host_mak
-fi
-
-if test "$have_sysmacros" = "yes" ; then
-  echo "CONFIG_SYSMACROS=y" >> $config_host_mak
-fi
+config_host_enable_if "CONFIG_REPLICATION"                  "$replication"
+config_host_enable_if "CONFIG_AF_VSOCK"                     "$have_af_vsock"
+config_host_enable_if "CONFIG_SYSMACROS"                    "$have_sysmacros"
 
 if test "$have_static_assert" = "yes" ; then
   echo "CONFIG_STATIC_ASSERT=y" >> $config_host_mak
@@ -6661,10 +6651,8 @@ fi
 #                                     a thread we have a handle to
 #   CONFIG_PTHREAD_SETNAME_NP       - A way of doing it on a particular
 #                                     platform
-if test "$pthread_setname_np" = "yes" ; then
-  echo "CONFIG_THREAD_SETNAME_BYTHREAD=y" >> $config_host_mak
-  echo "CONFIG_PTHREAD_SETNAME_NP=y" >> $config_host_mak
-fi
+config_host_enable_if "CONFIG_THREAD_SETNAME_BYTHREAD"      "$pthread_setname_np"
+config_host_enable_if "CONFIG_PTHREAD_SETNAME_NP"           "$pthread_setname_np"
 
 if test "$vxhs" = "yes" ; then
   echo "CONFIG_VXHS=y" >> $config_host_mak
