@@ -6534,26 +6534,16 @@ if test "$getauxval" = "yes" ; then
 fi
 
 if test "$glusterfs" = "yes" ; then
-  echo "CONFIG_GLUSTERFS=m" >> $config_host_mak
-  echo "GLUSTERFS_CFLAGS=$glusterfs_cflags" >> $config_host_mak
-  echo "GLUSTERFS_LIBS=$glusterfs_libs" >> $config_host_mak
+  config_host_module "CONFIG_GLUSTERFS"
+  # FIXME: could we write 'em unconditionally (allows little bit cleaner code)
+  config_host_set_uq "GLUSTERFS_CFLAGS"                     "$glusterfs_cflags"
+  config_host_set_uq "GLUSTERFS_LIBS"                       "$glusterfs_libs"
 fi
 
-if test "$glusterfs_xlator_opt" = "yes" ; then
-  echo "CONFIG_GLUSTERFS_XLATOR_OPT=y" >> $config_host_mak
-fi
-
-if test "$glusterfs_discard" = "yes" ; then
-  echo "CONFIG_GLUSTERFS_DISCARD=y" >> $config_host_mak
-fi
-
-if test "$glusterfs_fallocate" = "yes" ; then
-  echo "CONFIG_GLUSTERFS_FALLOCATE=y" >> $config_host_mak
-fi
-
-if test "$glusterfs_zerofill" = "yes" ; then
-  echo "CONFIG_GLUSTERFS_ZEROFILL=y" >> $config_host_mak
-fi
+config_host_enable_if "CONFIG_GLUSTERFS_XLATOR_OPT"         "$glusterfs_xlator_opt"
+config_host_enable_if "CONFIG_GLUSTERFS_DISCARD"            "$glusterfs_discard"
+config_host_enable_if "CONFIG_GLUSTERFS_FALLOCATE"          "$glusterfs_fallocate"
+config_host_enable_if "CONFIG_GLUSTERFS_ZEROFILL"           "$glusterfs_zerofill"
 
 if test "$libssh2" = "yes" ; then
   echo "CONFIG_LIBSSH2=m" >> $config_host_mak
