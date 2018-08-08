@@ -162,6 +162,26 @@ have_backend () {
     echo "$trace_backends" | grep "$1" >/dev/null
 }
 
+## set config flag
+config_host_enable() {
+    echo "$1=y" >> $config_host_mak
+}
+
+## set config flag if param is "yes"
+config_host_enable_if() {
+    test "$2" = "yes" && config_host_enable "$1"
+}
+
+## set config flag
+config_target_enable() {
+    echo "$1=y" >> $config_target_mak
+}
+
+## set config flag if param is "yes"
+config_target_enable_if() {
+    test "$2" = "yes" && config_target_enable "$1"
+}
+
 # default parameters
 source_path=$(dirname "$0")
 cpu=""
