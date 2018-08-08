@@ -5488,9 +5488,9 @@ if test "$bswap_h" = "yes" ; then
   echo "CONFIG_MACHINE_BSWAP_H=y" >> $config_host_mak
 fi
 if test "$curl" = "yes" ; then
-  echo "CONFIG_CURL=m" >> $config_host_mak
-  echo "CURL_CFLAGS=$curl_cflags" >> $config_host_mak
-  echo "CURL_LIBS=$curl_libs" >> $config_host_mak
+  config_host_module "CONFIG_CURL"
+  config_host_set_uq "CURL_CFLAGS"                          "$curl_cflags"
+  config_host_set_uq "CURL_LIBS"                            "$curl_cflags"
 fi
 if test "$brlapi" = "yes" ; then
   echo "CONFIG_BRLAPI=y" >> $config_host_mak
