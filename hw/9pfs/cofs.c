@@ -46,6 +46,7 @@ static ssize_t __readlink(V9fsState *s, V9fsPath *path, V9fsString *buf)
         buf->size = len;
         break;
     }
+    fprintf(stderr, "QEMU READLINK: \"%s\": %d\n", buf->data, len);
     return len;
 }
 

@@ -24,6 +24,8 @@ int relative_openat_nofollow(int dirfd, const char *path, int flags,
         return -1;
     }
 
+    fprintf(stderr, "relative_openat_nowfollow() dirfd=%d path=%s\n", dirfd, path);
+
     while (*path) {
         const char *c;
         int next_fd;
@@ -37,8 +39,10 @@ int relative_openat_nofollow(int dirfd, const char *path, int flags,
         if (c) {
             head[c - path] = 0;
             next_fd = openat_dir(fd, head);
+	    fprintf(stderr, "calling openat_dir() fn=%s --> %d\n", head, next_fd);
         } else {
             next_fd = openat_file(fd, head, flags, mode);
+	    fprintf(stderr, "calling openat_file() fn=%s --> %d\n", head, next_fd);
         }
         g_free(head);
         if (next_fd == -1) {
@@ -54,6 +58,7 @@ int relative_openat_nofollow(int dirfd, const char *path, int flags,
         path = c + 1;
     }
 
+    fprintf(stderr, "relative_openat_nowfollow() final fd=%d\n", fd);
     return fd;
 }
 

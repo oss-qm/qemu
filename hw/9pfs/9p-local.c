@@ -59,6 +59,8 @@ int local_open_nofollow(FsContext *fs_ctx, const char *path, int flags,
         path++;
     }
 
+    fprintf(stderr, "local_open_nofollow() fixed path: \"%s\"\n", path);
+
     return relative_openat_nofollow(data->mountfd, path, flags, mode);
 }
 
@@ -399,12 +401,16 @@ static ssize_t local_readlink(FsContext *fs_ctx, V9fsPath *fs_path,
         (fs_ctx->export_flags & V9FS_SM_MAPPED_FILE)) {
         int fd;
 
+        fprintf(stderr, "QEMU: (mapped) localfs: fs_path=\"%s\"\n", fs_path->data);
+
         fd = local_open_nofollow(fs_ctx, fs_path->data, O_RDONLY, 0);
         if (fd == -1) {
+	    fprintf(stderr, "QEMU: (mapped) localfs: local_open_nofollow() failed\n");
             return -1;
         }
         do {
             tsize = read(fd, (void *)buf, bufsz);
+            fprintf(stderr, "QEMU: (mapped) localfs: readlink sz=%d\n", tsize);
         } while (tsize == -1 && errno == EINTR);
         close_preserve_errno(fd);
     } else if ((fs_ctx->export_flags & V9FS_SM_PASSTHROUGH) ||
@@ -413,12 +419,15 @@ static ssize_t local_readlink(FsContext *fs_ctx, V9fsPath *fs_path,
         char *name = g_path_get_basename(fs_path->data);
         int dirfd;
 
+	fprintf(stderr, "QEMU: localfs (other): fn=\"%s\n", dirpath);
+
         dirfd = local_opendir_nofollow(fs_ctx, dirpath);
         if (dirfd == -1) {
             goto out;
         }
 
         tsize = readlinkat(dirfd, name, buf, bufsz);
+	fprintf(stderr, "QEMU: localfs (other): readlinkat result: %d\n", tsize);
         close_preserve_errno(dirfd);
     out:
         g_free(name);

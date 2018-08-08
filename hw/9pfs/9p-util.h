@@ -40,6 +40,8 @@ static inline int openat_file(int dirfd, const char *name, int flags,
     fd = openat(dirfd, name, flags | O_NOFOLLOW | O_NOCTTY | O_NONBLOCK,
                 mode);
     if (fd == -1) {
+	fprintf(stderr, "QEMU: openat_file failed: dirfd=%d name=\"%s\" errno=%d err=%s\n",
+		dirfd, name, errno, strerror(errno));
         return -1;
     }
 
