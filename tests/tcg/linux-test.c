@@ -33,12 +33,16 @@
 #include <sys/time.h>
 #include <sys/uio.h>
 #include <sys/socket.h>
+#include <sys/resource.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <sched.h>
 #include <dirent.h>
 #include <setjmp.h>
 #include <sys/shm.h>
+#include <stdbool.h>
+#include "qemu/typedefs.h"
+#include "qemu/compiler.h"
 #include "qemu/cutils.h"
 
 #define TESTPATH "/tmp/linux-test.tmp"
