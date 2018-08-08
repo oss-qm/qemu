@@ -6271,6 +6271,12 @@ echo "PKGVERSION=$pkgversion" >>$config_host_mak
 echo "SRC_PATH=$source_path" >> $config_host_mak
 echo "TARGET_DIRS=$target_list" >> $config_host_mak
 
+## set config flags for the selected targets
+for t in $target_list ; do
+    upper=$(echo "$t" | tr '[:lower:]' '[:upper:]' | tr '-' '_')
+    config_host_enable "CONFIG_TARGET_$upper"
+done
+
 config_host_enable_if "CONFIG_SYSTEM_KEYCODEMAPDB"          "$SYSTEM_KEYCODEMAPDB"
 
 if [ "$docs" = "yes" ] ; then
