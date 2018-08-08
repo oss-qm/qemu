@@ -6771,9 +6771,9 @@ if test "$have_rtnetlink" = "yes" ; then
 fi
 
 if test "$libxml2" = "yes" ; then
-  echo "CONFIG_LIBXML2=y" >> $config_host_mak
-  echo "LIBXML2_CFLAGS=$libxml2_cflags" >> $config_host_mak
-  echo "LIBXML2_LIBS=$libxml2_libs" >> $config_host_mak
+  config_host_enable "CONFIG_LIBXML2"
+  config_host_set_uq "LIBXML2_CFLAGS"                       "$libxml2_cflags"
+  config_host_set_uq "LIBXML2_LIBS"                         "$libxml2_libs"
 fi
 
 if test "$replication" = "yes" ; then
