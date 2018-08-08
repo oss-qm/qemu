@@ -264,9 +264,53 @@ supported_target() {
     return 1
 }
 
-
 ld_has() {
     $ld --help 2>/dev/null | grep ".$1" >/dev/null 2>&1
+}
+
+## write raw to host config makefile
+config_host_write() {
+    echo "$*" >> $config_host_mak
+}
+
+## set host config variable -- unquoted
+config_host_set_uq() {
+    config_host_write "$1=$2"
+}
+
+# set host config variable -- quoted
+config_host_set_q() {
+    config_host_write "$1=\"$2\""
+}
+
+## set config flag
+config_host_enable() {
+    config_host_write "$1=y"
+}
+
+## set config flag if param is "yes"
+config_host_enable_if() {
+    test "$2" = "yes" && config_host_enable "$1"
+}
+
+# set config flag to module
+config_host_module() {
+    config_host_write "$1=m"
+}
+
+## write raw to target config makefile
+config_target_write() {
+    echo "$1" >> $config_target_mak
+}
+
+## set config flag
+config_target_enable() {
+    config_target_write "$1"
+}
+
+## set config flag if param is "yes"
+config_target_enable_if() {
+    test "$2" = "yes" && config_target_enable "$1"
 }
 
 # default parameters
