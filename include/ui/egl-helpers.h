@@ -5,6 +5,14 @@
 #include <epoxy/egl.h>
 #include <gbm.h>
 
+#ifndef EGL_CONTEXT_OPENGL_PROFILE_MASK
+#define EGL_CONTEXT_OPENGL_PROFILE_MASK EGL_CONTEXT_OPENGL_PROFILE_MASK_KHR
+#endif
+
+#ifndef EGL_CONTEXT_OPENGL_CORE_PROFILE_BIT
+#define EGL_CONTEXT_OPENGL_CORE_PROFILE_BIT EGL_CONTEXT_OPENGL_CORE_PROFILE_BIT_KHR
+#endif
+
 extern EGLDisplay *qemu_egl_display;
 extern EGLConfig qemu_egl_config;
 extern DisplayGLMode qemu_egl_mode;
