@@ -300,8 +300,13 @@ trace-dtrace-root.h: trace-dtrace-root.dtrace
 
 trace-dtrace-root.o: trace-dtrace-root.dtrace
 
+ifeq ($(CONFIG_SYSTEM_KEYCODEMAPDB),y)
+KEYCODEMAP_GEN = /usr/bin/keymap-gen
+KEYCODEMAP_CSV = /usr/share/keycodemapdb/keymaps.csv
+else
 KEYCODEMAP_GEN = $(SRC_PATH)/ui/keycodemapdb/tools/keymap-gen
 KEYCODEMAP_CSV = $(SRC_PATH)/ui/keycodemapdb/data/keymaps.csv
+endif
 
 KEYCODEMAP_FILES = \
 		 ui/input-keymap-atset1-to-qcode.c \

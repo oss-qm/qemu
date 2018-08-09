@@ -519,6 +519,7 @@ vxhs=""
 libxml2=""
 docker="no"
 debug_mutex="no"
+CONFIG_SYSTEM_KEYCODEMAPDB="no"
 
 # cross compilers defaults, can be overridden with --cross-cc-ARCH
 cross_cc_aarch64="aarch64-linux-gnu-gcc"
@@ -1479,6 +1480,8 @@ for opt do
   ;;
   --disable-debug-mutex) debug_mutex=no
   ;;
+  --system-keycodemapdb) SYSTEM_KEYCODEMAPDB=yes
+  ;;
   *)
       echo "ERROR: unknown option $opt"
       echo "Try '$0 --help' for more information"
@@ -1669,6 +1672,8 @@ Advanced options (experts only):
                            xen pv domain builder
   --enable-debug-stack-usage
                            track the maximum stack usage of stacks created by qemu_alloc_stack
+  --system-keycodemapdb
+                           use keycodemapdb from system instead of cloned submodule
 
 Optional features, enabled with --enable-FEATURE and
 disabled with --disable-FEATURE, default is enabled if available:
@@ -6257,6 +6262,9 @@ echo "VERSION=$qemu_version" >>$config_host_mak
 echo "PKGVERSION=$pkgversion" >>$config_host_mak
 echo "SRC_PATH=$source_path" >> $config_host_mak
 echo "TARGET_DIRS=$target_list" >> $config_host_mak
+
+config_host_enable_if "CONFIG_SYSTEM_KEYCODEMAPDB"          "$SYSTEM_KEYCODEMAPDB"
+
 if [ "$docs" = "yes" ] ; then
   echo "BUILD_DOCS=yes" >> $config_host_mak
 fi
