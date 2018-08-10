@@ -539,6 +539,8 @@ supported_os="no"
 bogus_os="no"
 malloc_trim=""
 
+CONFIG_RELATIVE_DATADIR="yes"
+
 # parse CC options first
 for opt do
   optarg=$(expr "x$opt" : 'x[^=]*=\(.*\)')
@@ -1030,6 +1032,10 @@ for opt do
   --enable-gprof) gprof="yes"
   ;;
   --enable-gcov) gcov="yes"
+  ;;
+  --disable_relative_datadir) CONFIG_RELATIVE_DATADIR=""
+  ;;
+  --enable_relative_datadir) CONFIG_RELATIVE_DATADIR="y"
   ;;
   --static)
     static="yes"
@@ -1674,6 +1680,8 @@ Advanced options (experts only):
                            track the maximum stack usage of stacks created by qemu_alloc_stack
   --system-keycodemapdb
                            use keycodemapdb from system instead of cloned submodule
+  --disable-relative-datadir
+                           dont auto-detect data dir on executable path
 
 Optional features, enabled with --enable-FEATURE and
 disabled with --disable-FEATURE, default is enabled if available:
@@ -6701,6 +6709,8 @@ if test "$libssh2" = "yes" ; then
   echo "LIBSSH2_CFLAGS=$libssh2_cflags" >> $config_host_mak
   echo "LIBSSH2_LIBS=$libssh2_libs" >> $config_host_mak
 fi
+
+config_host_enable_if "CONFIG_RELATIVE_DATADIR"             "$CONFIG_RELATIVE_DATADIR"
 
 if test "$live_block_migration" = "yes" ; then
   echo "CONFIG_LIVE_BLOCK_MIGRATION=y" >> $config_host_mak
