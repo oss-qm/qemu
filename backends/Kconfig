@@ -3,3 +3,8 @@ source tpm/Kconfig
 config BACKEND_GPIO
     bool "Enable GPIO backends"
     default y
+
+config BACKEND_GPIO_BUILTIN
+    bool "Dummy GPIO backend"
+    depends on BACKEND_GPIO
+    default y
