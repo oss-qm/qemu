@@ -15,6 +15,8 @@
 #define TYPE_GPIO_BACKEND "gpio-backend"
 OBJECT_DECLARE_TYPE(GpioBackend, GpioBackendClass, GPIO_BACKEND)
 
+#define TYPE_GPIO_BUILTIN "gpio-builtin"
+
 /* dont change them - drivers rely on these values */
 #define QEMU_GPIO_DIRECTION_OUTPUT  0
 #define QEMU_GPIO_DIRECTION_INPUT   1
