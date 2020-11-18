@@ -33,6 +33,13 @@ config VIRTIO_BALLOON
     default y
     depends on VIRTIO
 
+config VIRTIO_GPIO
+    bool
+    default y
+    depends on VIRTIO
+    select BACKEND_GPIO
+    select BACKEND_GPIO_BUILTIN
+
 config VIRTIO_CRYPTO
     bool
     default y
