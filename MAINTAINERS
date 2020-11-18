@@ -2294,6 +2294,13 @@ S: Supported
 F: backends/gpio.c
 F: backends/gpio-builtin.c
 F: include/sysemu/gpio.h
+F: include/standard-headers/linux/virtio_gpio.h
+
+GPIO Virtio backend
+M: Enrico Weigelt, metux IT consult <info@metux.net>
+S: Supported
+F: hw/virtio/virtio-gpio.c
+F: include/hw/virtio/virtio-gpio.h
 
 Memory API
 M: Paolo Bonzini <pbonzini@redhat.com>
