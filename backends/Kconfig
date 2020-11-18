@@ -1,1 +1,5 @@
 source tpm/Kconfig
+
+config BACKEND_GPIO
+    bool "Enable GPIO backends"
+    default y
