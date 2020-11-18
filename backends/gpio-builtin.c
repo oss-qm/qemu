@@ -18,6 +18,7 @@
 #define MAX_GPIO                256
 
 #define WARN(...)               warn_report("gpio-builtin: " __VA_ARGS__)
+#define INFO(...)               info_report("gpio-builtin: " __VA_ARGS__)
 
 #define OP_HEAD(name) \
     GpioBuiltin *gpio = GPIO_BUILTIN(obj); \

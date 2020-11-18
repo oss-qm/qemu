@@ -3,8 +3,13 @@ source tpm/Kconfig
 config BACKEND_GPIO
     bool "Enable GPIO backends"
     default y
+#    help
+#      Enable routing virtual GPIOs to real backends, eg. host-side GPIOs
+#      or external programs
 
 config BACKEND_GPIO_BUILTIN
     bool "Dummy GPIO backend"
     depends on BACKEND_GPIO
     default y
+#    help
+#      Trivial GPIO backend that just prints out some debug infos.
