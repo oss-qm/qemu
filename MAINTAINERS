@@ -2403,6 +2403,12 @@ F: include/exec/gdbstub.h
 F: gdb-xml/
 F: tests/tcg/multiarch/gdbstub/
 
+GPIO Backend API
+M: Enrico Weigelt, metux IT consult <info@metux.net>
+S: Supported
+F: backends/gpio.c
+F: include/sysemu/gpio.h
+
 Memory API
 M: Paolo Bonzini <pbonzini@redhat.com>
 S: Supported
