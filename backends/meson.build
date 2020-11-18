@@ -17,5 +17,6 @@ softmmu_ss.add(when: 'CONFIG_VIRTIO_CRYPTO', if_true: files('cryptodev-vhost.c')
 softmmu_ss.add(when: ['CONFIG_VIRTIO_CRYPTO', 'CONFIG_VHOST_CRYPTO'], if_true: files('cryptodev-vhost-user.c'))
 softmmu_ss.add(when: 'CONFIG_GIO', if_true: [files('dbus-vmstate.c'), gio])
 softmmu_ss.add(when: 'CONFIG_BACKEND_GPIO', if_true: files('gpio.c'))
+softmmu_ss.add(when: 'CONFIG_BACKEND_GPIO_BUILTIN', if_true: files('gpio-builtin.c'))
 
 subdir('tpm')

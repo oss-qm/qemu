@@ -2407,6 +2407,7 @@ GPIO Backend API
 M: Enrico Weigelt, metux IT consult <info@metux.net>
 S: Supported
 F: backends/gpio.c
+F: backends/gpio-builtin.c
 F: include/sysemu/gpio.h
 
 Memory API
