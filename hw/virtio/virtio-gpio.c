@@ -22,7 +22,6 @@
 #include "standard-headers/linux/virtio_ids.h"
 #include "standard-headers/linux/virtio_gpio.h"
 
-#define INFO(...) info_report("virtio-gpio: " __VA_ARGS__)
 #define WARN(...) warn_report("virtio-gpio: " __VA_ARGS__)
 
 #define TYPE_VIRTIO_GPIO "virtio-gpio-device"
@@ -63,25 +62,6 @@ static bool is_guest_ready(VirtIOGPIO *vgpio)
     return false;
 }
 
-static const char *op_str(int op)
-{
-    switch (op) {
-        case VIRTIO_GPIO_EV_GUEST_REQUEST:
-            return "request";
-        case VIRTIO_GPIO_EV_GUEST_DIRECTION_INPUT:
-            return "direction-input";
-        case VIRTIO_GPIO_EV_GUEST_DIRECTION_OUTPUT:
-            return "direction-output";
-        case VIRTIO_GPIO_EV_GUEST_GET_DIRECTION:
-            return "get-direction";
-        case VIRTIO_GPIO_EV_GUEST_GET_VALUE:
-            return "get";
-        case VIRTIO_GPIO_EV_GUEST_SET_VALUE:
-            return "set";
-    }
-    return "???";
-}
-
 static void virtio_gpio_reply(VirtIOGPIO *vgpio, int type, int pin, int value)
 {
     VirtQueueElement *elem;
@@ -101,7 +81,6 @@ static void virtio_gpio_reply(VirtIOGPIO *vgpio, int type, int pin, int value)
     vgpio->reply_buffer.type = type;
     vgpio->reply_buffer.pin = pin;
     vgpio->reply_buffer.value = value;
-    INFO("Reply: type=%X (%d) pin=%d value=%d", type, vgpio->reply_buffer.type, pin, value);
     len = iov_from_buf(elem->in_sg, elem->in_num, 0, &vgpio->reply_buffer,
                        sizeof(struct virtio_gpio_event));
     virtqueue_push(vgpio->vq_out, elem, len);
@@ -111,7 +90,6 @@ static void virtio_gpio_reply(VirtIOGPIO *vgpio, int type, int pin, int value)
 
 static int do_request(VirtIOGPIO *vgpio, struct virtio_gpio_event *reqbuf)
 {
-    INFO("REQUEST type=%d pin=%d value=%d op=%s", reqbuf->type, reqbuf->pin, reqbuf->value, op_str(reqbuf->type));
     switch (reqbuf->type) {
     case VIRTIO_GPIO_EV_GUEST_REQUEST:
         return gpio_backend_request(vgpio->gpio, reqbuf->pin);
@@ -138,14 +116,11 @@ static int virtio_gpio_notify(void *obj, int pin, int event, int value)
 
     switch (event) {
     case GPIO_EVENT_LEVEL:
-        INFO("pin %d changed level: %d", pin, value);
         virtio_gpio_reply(vgpio, VIRTIO_GPIO_EV_HOST_LEVEL, pin, value);
     break;
     case GPIO_EVENT_INPUT:
-        INFO("pin %d changed to input: value=%d", pin, value);
     break;
     case GPIO_EVENT_OUTPUT:
-        INFO("pin %d changed to output: value=%d", pin, value);
     break;
     default:
         WARN("unhandled notification: pin=%d event=%d value=%d", pin,
@@ -188,7 +163,6 @@ static void virtio_gpio_handle_rx(VirtIODevice *vdev, VirtQueue *vq)
 static uint64_t virtio_gpio_get_features(VirtIODevice *vdev, uint64_t f,
                                          Error **errp)
 {
-    INFO("virtio_gpio_get_features()");
     return f;
 }
 
@@ -203,7 +177,6 @@ static void virtio_gpio_vm_state_change(void *opaque, int running,
 {
     VirtIOGPIO *vgpio = opaque;
 
-    INFO("virtio_gpio_vm_state_change");
     if (running && is_guest_ready(vgpio)) {
         virtio_gpio_process(vgpio);
     }
@@ -218,9 +191,6 @@ static void virtio_gpio_set_status(VirtIODevice *vdev, uint8_t status)
     }
 
     vdev->status = status;
-
-    INFO("set_status: %d", status);
-    /* Something changed, try to process buffers */
     virtio_gpio_process(vgpio);
 }
 
@@ -278,7 +248,6 @@ static void virtio_gpio_device_realize(DeviceState *dev, Error **errp)
     }
 
     if ((vgpio->num_gpios < 1) && (vgpio->gpio_names_len > 0)) {
-        INFO("taking gpio number from len-gpio-names");
         vgpio->num_gpios = vgpio->gpio_names_len;
     }
 
