@@ -2301,6 +2301,7 @@ S: Supported
 F: hw/virtio/virtio-gpio.c
 F: include/hw/virtio/virtio-gpio.h
 F: include/standard-headers/linux/virtio_gpio.h
+F: docs/devel/virtio-gpio.rst
 
 Memory API
 M: Paolo Bonzini <pbonzini@redhat.com>
